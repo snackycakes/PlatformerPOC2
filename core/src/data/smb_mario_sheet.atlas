@@ -1,0 +1,20 @@
+
+smb_mario_sheet.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+SmallMarioStandingRight
+  rotate: false
+  xy: 210, 0
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+SmallMarioWalkingRight1
+  rotate: false
+  xy: 239, 0
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+
