@@ -1,16 +1,21 @@
 package com.mygdx.game;
 
 import java.util.ArrayList;
+
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapTile;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.mygdx.game.TileContainer.PositionType;
 
 public class MarioStage extends Stage {
 	private TiledMap tiledMap;
@@ -19,6 +24,7 @@ public class MarioStage extends Stage {
 	protected float gravityAccl = -0.3f;
 	protected float frictionGround = 0.06f;
 	protected float frictionAir = 0.00f;
+	protected Vector2 tileSize = new Vector2(16, 16);
 
 	public MarioStage(Viewport viewport, TiledMap tiledMap, OrthogonalTiledMapRenderer tileRenderer) {
 		super(viewport);
@@ -74,64 +80,140 @@ public class MarioStage extends Stage {
 		actor.update();
 		
 		// check and resolve tile collisions
-		//resolveTileCollisionsNew(actor);
-		
+		resolveTileCollisions(actor);		
 		actor.commitDesiredPosition();
 	}
 	
 	public Vector2 getTileIndex(HitBox hitBox) {
-		int xPos = (int)(hitBox.getPositionX() + hitBox.getSizeX()) / 2;
-		int yPos = (int)(hitBox.getPositionY() + hitBox.getSizeY()) / 2;
+		int xPos = (int)(hitBox.getPositionX() + hitBox.getSizeX() / 2);
+		int yPos = (int)(hitBox.getPositionY() + hitBox.getSizeY() / 2);
 		return new Vector2(xPos, yPos);
 	}
 	
-/*
-	public ArrayList<Cell> getSurroundingTiles (MarioActor actor) {
+
+	public ArrayList<TileContainer> getSurroundingTiles (MarioActor actor) {
 		ArrayList<TileContainer> returnValue = new ArrayList<TileContainer>();
 		
-		HitBox hitBox = actor.createHitBox();
+		HitBox hitBox = actor.createHitBox();		
+		Vector2 hitBoxTileIndex =  getTileIndex(hitBox);
 		
-		OrderedPair hitBoxTileIndex =  getTileIndexe(hitBox);
-		int hitBoxTileWidth = (int)Math.ceil((double)hitBox.getSizeX() / tileSize.getPosX());
-		int hitBoxTileHeight = (int)Math.ceil((double)hitBox.getSizeY() / tileSize.getPosY());
-		int xPos, yPos;		
+		int hitBoxTileWidth = (int)hitBox.getSizeX();
+		int hitBoxTileHeight = (int)hitBox.getSizeY();
+		int xPos, yPos;
 		
-		yPos = hitBoxTileIndex.getPosY() + hitBoxTileHeight;
-		for (xPos = hitBoxTileIndex.getPosX(); xPos < hitBoxTileIndex.getPosX() + hitBoxTileWidth; xPos++) {
-			if (xPos >= 0 && yPos >= 0 && tiles[xPos][yPos] != null) { returnValue.add(new TileContainer(PositionType.LOWER, hitBox, tiles[xPos][yPos])); }
+		TiledMapTileLayer layer = (TiledMapTileLayer)tiledMap.getLayers().get("Collision");
+		
+		yPos = (int)hitBoxTileIndex.y - hitBoxTileHeight;
+		for (xPos = (int)hitBoxTileIndex.x; xPos < hitBoxTileIndex.x + hitBoxTileWidth; xPos++) {
+			if (xPos >= 0 && yPos >= 0 && layer.getCell(xPos, yPos) != null) { returnValue.add(new TileContainer(PositionType.LOWER, hitBox, layer.getCell(xPos, yPos), xPos, yPos)); }
 		}
-		yPos = hitBoxTileIndex.getPosY() - 1;
-		for (xPos = hitBoxTileIndex.getPosX(); xPos < hitBoxTileIndex.getPosX() + hitBoxTileWidth; xPos++) {
-			if (xPos >= 0 && yPos >= 0 && tiles[xPos][yPos] != null) { returnValue.add(new TileContainer(PositionType.UPPER, hitBox, tiles[xPos][yPos])); }
+		yPos = (int)hitBoxTileIndex.y + 1;
+		for (xPos = (int)hitBoxTileIndex.x; xPos < hitBoxTileIndex.x + hitBoxTileWidth; xPos++) {
+			if (xPos >= 0 && yPos >= 0 && layer.getCell(xPos, yPos) != null) { returnValue.add(new TileContainer(PositionType.UPPER, hitBox, layer.getCell(xPos, yPos), xPos, yPos)); }
 		}
-		xPos = hitBoxTileIndex.getPosX() - 1;
-		for (yPos = hitBoxTileIndex.getPosY(); yPos < hitBoxTileIndex.getPosY() + hitBoxTileHeight; yPos++) {
-			if (xPos >= 0 && yPos >= 0 && tiles[xPos][yPos] != null) { returnValue.add(new TileContainer(PositionType.LEFT, hitBox, tiles[xPos][yPos])); }
+		xPos = (int)hitBoxTileIndex.x - 1;
+		for (yPos = (int)hitBoxTileIndex.y - hitBoxTileHeight; yPos < hitBoxTileIndex.y; yPos++) {
+			if (xPos >= 0 && yPos >= 0 && layer.getCell(xPos, yPos) != null) { returnValue.add(new TileContainer(PositionType.LEFT, hitBox, layer.getCell(xPos, yPos), xPos, yPos)); }
 		}
-		xPos = hitBoxTileIndex.getPosX() + hitBoxTileWidth;
-		for (yPos = hitBoxTileIndex.getPosY(); yPos < hitBoxTileIndex.getPosY() + hitBoxTileHeight; yPos++) {
-			if (xPos >= 0 && yPos >= 0 && tiles[xPos][yPos] != null) { returnValue.add(new TileContainer(PositionType.RIGHT, hitBox, tiles[xPos][yPos])); }
+		xPos = (int)hitBoxTileIndex.x + hitBoxTileWidth;
+		for (yPos = (int)hitBoxTileIndex.y - hitBoxTileHeight; yPos < hitBoxTileIndex.y; yPos++) {
+			if (xPos >= 0 && yPos >= 0 && layer.getCell(xPos, yPos) != null) { returnValue.add(new TileContainer(PositionType.RIGHT, hitBox, layer.getCell(xPos, yPos), xPos, yPos)); }
 		}
 		
-		yPos = hitBoxTileIndex.getPosY() - 1;
-		xPos = hitBoxTileIndex.getPosX() - 1;
-		if (xPos >= 0 && yPos >= 0 && tiles[xPos][yPos] != null) { returnValue.add(new TileContainer(PositionType.DIAGUPPERLEFT, hitBox, tiles[xPos][yPos])); }
+		yPos = (int)hitBoxTileIndex.y + 1;
+		xPos = (int)hitBoxTileIndex.x - 1;
+		if (xPos >= 0 && yPos >= 0 && layer.getCell(xPos, yPos) != null) { returnValue.add(new TileContainer(PositionType.DIAGUPPERLEFT, hitBox, layer.getCell(xPos, yPos), xPos, yPos)); }
 		
-		yPos = hitBoxTileIndex.getPosY() - 1;
-		xPos = hitBoxTileIndex.getPosX() + hitBoxTileWidth;
-		if (xPos >= 0 && yPos >= 0 && tiles[xPos][yPos] != null) { returnValue.add(new TileContainer(PositionType.DIAGUPPERRIGHT, hitBox, tiles[xPos][yPos])); }
+		yPos = (int)hitBoxTileIndex.y + 1;
+		xPos = (int)hitBoxTileIndex.x + hitBoxTileWidth;
+		if (xPos >= 0 && yPos >= 0 && layer.getCell(xPos, yPos) != null) { returnValue.add(new TileContainer(PositionType.DIAGUPPERRIGHT, hitBox, layer.getCell(xPos, yPos), xPos, yPos)); }
 		
-		yPos = hitBoxTileIndex.getPosY() + hitBoxTileHeight;
-		xPos = hitBoxTileIndex.getPosX() - 1;
-		if (xPos >= 0 && yPos >= 0 && tiles[xPos][yPos] != null) { returnValue.add(new TileContainer(PositionType.DIAGLOWERLEFT, hitBox, tiles[xPos][yPos])); }
+		yPos = (int)hitBoxTileIndex.y - hitBoxTileHeight;
+		xPos = (int)hitBoxTileIndex.x - 1;
+		if (xPos >= 0 && yPos >= 0 && layer.getCell(xPos, yPos) != null) { returnValue.add(new TileContainer(PositionType.DIAGLOWERLEFT, hitBox, layer.getCell(xPos, yPos), xPos, yPos)); }
 		
-		yPos = hitBoxTileIndex.getPosY() + hitBoxTileHeight;
-		xPos = hitBoxTileIndex.getPosX() + hitBoxTileWidth;
-		if (xPos >= 0 && yPos >= 0 && tiles[xPos][yPos] != null) { returnValue.add(new TileContainer(PositionType.DIAGLOWERRIGHT, hitBox, tiles[xPos][yPos])); }
+		yPos = (int)hitBoxTileIndex.y - hitBoxTileHeight;
+		xPos = (int)hitBoxTileIndex.x + hitBoxTileWidth;
+		if (xPos >= 0 && yPos >= 0 && layer.getCell(xPos, yPos) != null) { returnValue.add(new TileContainer(PositionType.DIAGLOWERRIGHT, hitBox, layer.getCell(xPos, yPos), xPos, yPos)); }
 		
 		return returnValue;
 	}
-*/
+	
+	public void resolveTileCollisions(MarioActor actor) {
+		ArrayList<TileContainer> surroundingTiles = getSurroundingTiles(actor);
+		boolean isMobGrounded = false;
+		
+		for (TileContainer tileContainer : surroundingTiles) {	
+			//Cell cell = tileContainer.getTileCell();
+			//TiledMapTile tile = cell.getTile();
+			HitBox tileHitBox = new HitBox(tileContainer.getxIndex(), tileContainer.getyIndex(), 1, 1);
+
+			PositionType resolvePosition;
+			
+			Rectangle collisionDepth = tileHitBox.checkCollision(tileContainer.getRelativeHitBox());
+			
+			if (collisionDepth != null) {
+				resolvePosition = tileContainer.getRelativePosition();
+				
+				// resolve a diagonal collision to either left, right, up, or down.
+				if ((resolvePosition == PositionType.DIAGLOWERLEFT || resolvePosition == PositionType.DIAGLOWERRIGHT || resolvePosition == PositionType.DIAGUPPERLEFT || resolvePosition == PositionType.DIAGUPPERRIGHT)) {
+					// check previous hit box location to determine desired collision for this update
+					
+					if (resolvePosition == PositionType.DIAGLOWERLEFT || resolvePosition == PositionType.DIAGLOWERRIGHT) {
+						if ((actor.getY() > tileHitBox.getPositionY())) {
+							if (resolvePosition == PositionType.DIAGLOWERLEFT) {
+								resolvePosition = PositionType.LEFT;
+							} else {
+								resolvePosition = PositionType.RIGHT;
+							}
+						} else {
+							resolvePosition = PositionType.LOWER;
+						}
+					} else {
+						if (collisionDepth.getWidth() <= collisionDepth.getHeight()) {
+							if (resolvePosition == PositionType.DIAGUPPERLEFT) {
+								resolvePosition = PositionType.LEFT;
+							} else {
+								resolvePosition = PositionType.RIGHT;
+							}
+						} else {
+							resolvePosition = PositionType.UPPER;
+						}
+					}
+				}
+				
+				switch (resolvePosition) {
+					case LOWER:
+						actor.setDesiredPositionY(actor.getDesiredPositionY() + collisionDepth.getHeight());
+						isMobGrounded = true;
+						break;
+					case UPPER:
+						actor.setDesiredPositionY(actor.getDesiredPositionY() - collisionDepth.getHeight());
+						actor.setVelocityY(0);
+						/*
+						if (actor.isPawn() && tileContainer.getTile() != null && tileContainer.getTile().isDestructible()) {
+							tileContainer.getTile().destroyNode();
+						}
+						*/
+						break;
+					case LEFT:
+						actor.setDesiredPositionX(actor.getDesiredPositionX() + collisionDepth.getWidth());
+						actor.setVelocityX(0);
+						break;
+					case RIGHT:
+						actor.setDesiredPositionX(actor.getDesiredPositionX() - collisionDepth.getWidth());
+						actor.setVelocityX(0);
+						break;
+					default:
+						break;					
+				}
+				
+				//actor.collisionUpdate(tileContainer);
+			}
+		}
+		
+		actor.setGrounded(isMobGrounded);
+	}
 	
 	@Override
 	public void dispose() {

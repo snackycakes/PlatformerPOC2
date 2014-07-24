@@ -168,6 +168,10 @@ public class MarioActor extends Actor {
 		this.desiredPosition.set(getX(), getY());
 		this.desiredPosition.add(velocity.cpy().scl(Gdx.graphics.getDeltaTime()));
 	}
+	
+	public HitBox createHitBox() {
+		return new HitBox(desiredPosition, new Vector2(getWidth(), getHeight()));
+	}
 
 	public Vector2 getVelocity() {
 		return velocity;
@@ -175,5 +179,23 @@ public class MarioActor extends Actor {
 
 	public void setVelocity(Vector2 velocity) {
 		this.velocity = velocity;
-	}	
+	}
+
+	public boolean isPawn() {
+		return isPawn;
+	}
+
+	public void setPawn(boolean isPawn) {
+		this.isPawn = isPawn;
+	}
+	
+	public void setVelocityY(float speedY) {
+		velocity.y = speedY;
+		applyJumpForce = false;
+		jumpFrameCount = 0;
+	}
+	
+	public void setVelocityX(float speedX) {
+		velocity.x = speedX;
+	}
 }

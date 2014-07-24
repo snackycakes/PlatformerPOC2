@@ -1,7 +1,7 @@
 package com.mygdx.game;
 
-import java.awt.Rectangle;
-
+import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 public class HitBox {
@@ -22,19 +22,25 @@ public class HitBox {
 		init();
 	}
 	
+	public HitBox(float posX, float posY, float sizeX, float sizeY) {
+		this.position.x = posX;
+		this.position.y = posY;
+		this.size.x = sizeX;
+		this.size.y = sizeY;
+		init();
+	}
+	
 	private void init() {		
-		this.boundingBox = new Rectangle((int)this.position.x, (int)this.position.y, (int)this.size.x, (int)this.size.y);
+		this.boundingBox = new Rectangle(this.position.x, this.position.y, this.size.x, this.size.y);
 	}
 
-	public Vector2 checkCollision(HitBox hitBox) {
-		Vector2 returnValue = null;		
-		Rectangle intersection = this.boundingBox.intersection(hitBox.boundingBox);
-		if (intersection.getSize().height > 0 && intersection.getSize().width > 0)
-		{
-			returnValue = new Vector2();
-			returnValue.x = intersection.getSize().width;
-			returnValue.y = intersection.getSize().height;
+	public Rectangle checkCollision(HitBox hitBox) {	
+		Rectangle returnValue = new Rectangle();		
+
+		if (!Intersector.intersectRectangles(boundingBox, hitBox.boundingBox, returnValue)) {
+			returnValue = null;
 		}
+		
 		return returnValue;
 	}
 	
