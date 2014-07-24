@@ -16,12 +16,12 @@ public class MarioActor extends Actor {
 	private boolean isPawn = false;
 	private boolean isVisible = true;
 	private boolean isInView = true;
-	
-	private float movementForce = 2f;
-	private float movementAccl = .12f;
-	private float jumpForce = 3.6f;
-	private float jumpInitialForce = 2.8f;
-	private float jumpAcceleration = 2f;
+
+	private float movementForce = 6f;
+	private float movementAccl = .36f;
+	private float jumpForce = 9f;
+	private float jumpInitialForce = 8.4f;
+	private float jumpAcceleration = 6f;
 	private float jumpMaxFrames = 20f;
 	private float jumpFrameCount = 0f;
 	private float jumpMovementCoefficent = .4f;
@@ -197,5 +197,101 @@ public class MarioActor extends Actor {
 	
 	public void setVelocityX(float speedX) {
 		velocity.x = speedX;
+	}
+	
+	public Vector2 getDesiredPosition() {
+		return desiredPosition;
+	}
+
+	public void setDesiredPosition(Vector2 desiredPosition) {
+		this.desiredPosition = desiredPosition;
+	}
+
+	public boolean isDesiredPositionAdjusted() {
+		return desiredPositionAdjusted;
+	}
+
+	public void setDesiredPositionAdjusted(boolean desiredPositionAdjusted) {
+		this.desiredPositionAdjusted = desiredPositionAdjusted;
+	}
+
+	public boolean isVisible() {
+		return isVisible;
+	}
+
+	public void setVisible(boolean isVisible) {
+		this.isVisible = isVisible;
+	}
+
+	public boolean isInView() {
+		return isInView;
+	}
+
+	public void setInView(boolean isInView) {
+		this.isInView = isInView;
+	}
+
+	public float getMovementForce() {
+		return movementForce;
+	}
+
+	public void setMovementForce(float movementForce) {
+		this.movementForce = movementForce;
+	}
+
+	public float getMovementAccl() {
+		return movementAccl;
+	}
+
+	public void setMovementAccl(float movementAccl) {
+		this.movementAccl = movementAccl;
+	}
+
+	public float getJumpForce() {
+		return jumpForce;
+	}
+
+	public void setJumpForce(float jumpForce) {
+		this.jumpForce = jumpForce;
+	}
+
+	public float getJumpInitialForce() {
+		return jumpInitialForce;
+	}
+
+	public void setJumpInitialForce(float jumpInitialForce) {
+		this.jumpInitialForce = jumpInitialForce;
+	}
+
+	public float getJumpAcceleration() {
+		return jumpAcceleration;
+	}
+
+	public void setJumpAcceleration(float jumpAcceleration) {
+		this.jumpAcceleration = jumpAcceleration;
+	}
+
+	public float getJumpMaxFrames() {
+		return jumpMaxFrames;
+	}
+
+	public void setJumpMaxFrames(float jumpMaxFrames) {
+		this.jumpMaxFrames = jumpMaxFrames;
+	}
+
+	public float getJumpFrameCount() {
+		return jumpFrameCount;
+	}
+
+	public void setJumpFrameCount(float jumpFrameCount) {
+		this.jumpFrameCount = jumpFrameCount;
+	}
+
+	public float getJumpMovementCoefficent() {
+		return jumpMovementCoefficent;
+	}
+
+	public void setJumpMovementCoefficent(float jumpMovementCoefficent) {
+		this.jumpMovementCoefficent = jumpMovementCoefficent;
 	}
 }

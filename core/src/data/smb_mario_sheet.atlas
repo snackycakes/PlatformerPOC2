@@ -17,4 +17,73 @@ SmallMarioWalkingRight1
   orig: 16, 16
   offset: 0, 0
   index: -1
-
+SmallMarioWalkingRight2
+  rotate: false
+  xy: 268, 0
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+SmallMarioWalkingRight3
+  rotate: false
+  xy: 299, 0
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+SmallMarioSlidingRight
+  rotate: false
+  xy: 59, 0
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+SmallMarioJumpingRight
+  rotate: false
+  xy: 360, 0
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+SmallMarioStandingLeft
+  rotate: false
+  xy: 180, 0
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+SmallMarioWalkingLeft1
+  rotate: false
+  xy: 149, 0
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+SmallMarioWalkingLeft2
+  rotate: false
+  xy: 120, 0
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+SmallMarioWalkingLeft3
+  rotate: false
+  xy: 89, 0
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+SmallMarioSlidingLeft
+  rotate: false
+  xy: 330, 0
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+SmallMarioJumpingLeft
+  rotate: false
+  xy: 29, 0
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1

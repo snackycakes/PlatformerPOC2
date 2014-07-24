@@ -1,5 +1,7 @@
 package com.mygdx.game;
 
+import java.awt.event.KeyEvent;
+
 import javax.swing.plaf.basic.BasicInternalFrameTitlePane.MoveAction;
 
 import com.badlogic.gdx.ApplicationListener;
@@ -36,9 +38,10 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class MarioGame implements ApplicationListener, InputProcessor {
 	
-    private Stage stage;
-    //private TextureAtlas marioAtlas;
-    private Mario mario;
+    public static float elapsedTime = 0;
+    
+    private MarioStage stage;
+    private Mario playerMario;
     
     @Override
     public void create() {
@@ -56,12 +59,12 @@ public class MarioGame implements ApplicationListener, InputProcessor {
 		
     	stage = new MarioStage(new FitViewport(16, 15, camera), tiledMap, tileRenderer);    	
         
-        mario = new Mario();
-        mario.setPosition(0, 10);
+    	playerMario = new Mario();
+    	playerMario.setPosition(0, 10);
         
-        stage.addActor(mario);
+        stage.addActor(playerMario);
         
-        //mario.setMovingRight(true);
+        Gdx.input.setInputProcessor(this);
     }
 
     @Override
@@ -75,6 +78,8 @@ public class MarioGame implements ApplicationListener, InputProcessor {
 		// clear the screen
 		Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 0);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		
+		MarioGame.elapsedTime += Gdx.graphics.getDeltaTime();
 		
         stage.draw();
     }
@@ -94,14 +99,128 @@ public class MarioGame implements ApplicationListener, InputProcessor {
 
 	@Override
 	public boolean keyDown(int keycode) {
-		// TODO Auto-generated method stub
-		return false;
+		switch (keycode) {
+		case Keys.UP:
+			break;
+
+		case Keys.DOWN:
+			break;
+
+		case Keys.LEFT:
+			playerMario.setMovingLeft(true);
+			break;
+
+		case Keys.RIGHT:
+			playerMario.setMovingRight(true);
+			break;
+
+		case Keys.SPACE:
+      			playerMario.setJumping(true);
+			break;
+
+		case Keys.CONTROL_LEFT:
+			break;
+		
+		case Keys.G:
+			if (Gdx.input.isKeyPressed(Keys.SHIFT_LEFT) || Gdx.input.isKeyPressed(Keys.SHIFT_RIGHT))
+				stage.setGravity(stage.getGravity() - .1f);
+			else
+				stage.setGravity(stage.getGravity() + .1f);
+			break;
+			
+		case Keys.H:
+			if (Gdx.input.isKeyPressed(Keys.SHIFT_LEFT) || Gdx.input.isKeyPressed(Keys.SHIFT_RIGHT))
+				stage.setGravityAccl(stage.getGravityAccl() - .01f);
+			else
+				stage.setGravityAccl(stage.getGravityAccl() + .01f);
+			break;
+			
+		case Keys.F:
+			if (Gdx.input.isKeyPressed(Keys.SHIFT_LEFT) || Gdx.input.isKeyPressed(Keys.SHIFT_RIGHT))
+				stage.setFrictionGround(stage.getFrictionGround() - .01f);
+			else
+				stage.setFrictionGround(stage.getFrictionGround() + .01f);
+			break;
+			
+		case Keys.A:
+			if (Gdx.input.isKeyPressed(Keys.SHIFT_LEFT) || Gdx.input.isKeyPressed(Keys.SHIFT_RIGHT))
+				stage.setFrictionAir(stage.getFrictionAir() - .01f);
+			else
+				stage.setFrictionAir(stage.getFrictionAir() + .01f);
+			break;
+			
+		case Keys.J:
+			if (Gdx.input.isKeyPressed(Keys.SHIFT_LEFT) || Gdx.input.isKeyPressed(Keys.SHIFT_RIGHT))
+				playerMario.setJumpForce(playerMario.getJumpForce() - .1f);
+			else
+				playerMario.setJumpForce(playerMario.getJumpForce() + .1f);
+			break;
+			
+		case Keys.U:
+			if (Gdx.input.isKeyPressed(Keys.SHIFT_LEFT) || Gdx.input.isKeyPressed(Keys.SHIFT_RIGHT))
+				playerMario.setJumpInitialForce(playerMario.getJumpInitialForce() - .1f);
+			else
+				playerMario.setJumpInitialForce(playerMario.getJumpInitialForce() + .1f);
+			break;
+			
+		case Keys.K:
+			if (Gdx.input.isKeyPressed(Keys.SHIFT_LEFT) || Gdx.input.isKeyPressed(Keys.SHIFT_RIGHT))
+				playerMario.setJumpAcceleration(playerMario.getJumpAcceleration() - .1f);
+			else
+				playerMario.setJumpAcceleration(playerMario.getJumpAcceleration() + .1f);
+			break;
+			
+		case Keys.L:
+			if (Gdx.input.isKeyPressed(Keys.SHIFT_LEFT) || Gdx.input.isKeyPressed(Keys.SHIFT_RIGHT))
+				playerMario.setJumpMaxFrames(playerMario.getJumpMaxFrames() - 1f);
+			else
+				playerMario.setJumpMaxFrames(playerMario.getJumpMaxFrames() + 1f);
+			break;
+			
+		case Keys.M:
+			if (Gdx.input.isKeyPressed(Keys.SHIFT_LEFT) || Gdx.input.isKeyPressed(Keys.SHIFT_RIGHT))
+				playerMario.setMovementForce(playerMario.getMovementForce() - 1f);
+			else
+				playerMario.setMovementForce(playerMario.getMovementForce() + 1f);
+			break;
+			
+		case Keys.N:
+			if (Gdx.input.isKeyPressed(Keys.SHIFT_LEFT) || Gdx.input.isKeyPressed(Keys.SHIFT_RIGHT))
+				playerMario.setMovementAccl(playerMario.getMovementAccl() - 1f);
+			else
+				playerMario.setMovementAccl(playerMario.getMovementAccl() + 1f);
+			break;
+	}
+
+		return true;
 	}
 
 	@Override
 	public boolean keyUp(int keycode) {
-		// TODO Auto-generated method stub
-		return false;
+		switch (keycode) {
+		case Keys.UP:
+			break;
+
+		case Keys.DOWN:
+			break;
+
+		case Keys.LEFT:
+			playerMario.setMovingLeft(false);
+			break;
+
+		case Keys.RIGHT:
+			playerMario.setMovingRight(false);
+			break;
+
+		case Keys.SPACE:
+			playerMario.setJumping(false);
+			break;
+			
+		case Keys.CONTROL_LEFT:
+			break;
+		}
+		
+		return true;
 	}
 
 	@Override

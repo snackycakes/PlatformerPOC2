@@ -20,9 +20,9 @@ import com.mygdx.game.TileContainer.PositionType;
 public class MarioStage extends Stage {
 	private TiledMap tiledMap;
 	private OrthogonalTiledMapRenderer tileRenderer;
-	protected float gravity = -4f;
-	protected float gravityAccl = -0.3f;
-	protected float frictionGround = 0.06f;
+	protected float gravity = -9f;
+	protected float gravityAccl = -1f;
+	protected float frictionGround = 0.2f;
 	protected float frictionAir = 0.00f;
 	protected Vector2 tileSize = new Vector2(16, 16);
 
@@ -84,6 +84,38 @@ public class MarioStage extends Stage {
 		actor.commitDesiredPosition();
 	}
 	
+	public float getGravity() {
+		return gravity;
+	}
+
+	public void setGravity(float gravity) {
+		this.gravity = gravity;
+	}
+
+	public float getGravityAccl() {
+		return gravityAccl;
+	}
+
+	public void setGravityAccl(float gravityAccl) {
+		this.gravityAccl = gravityAccl;
+	}
+
+	public float getFrictionGround() {
+		return frictionGround;
+	}
+
+	public void setFrictionGround(float frictionGround) {
+		this.frictionGround = frictionGround;
+	}
+
+	public float getFrictionAir() {
+		return frictionAir;
+	}
+
+	public void setFrictionAir(float frictionAir) {
+		this.frictionAir = frictionAir;
+	}
+
 	public Vector2 getTileIndex(HitBox hitBox) {
 		int xPos = (int)(hitBox.getPositionX() + hitBox.getSizeX() / 2);
 		int yPos = (int)(hitBox.getPositionY() + hitBox.getSizeY() / 2);
@@ -103,39 +135,40 @@ public class MarioStage extends Stage {
 		
 		TiledMapTileLayer layer = (TiledMapTileLayer)tiledMap.getLayers().get("Collision");
 		
-		yPos = (int)hitBoxTileIndex.y - hitBoxTileHeight;
+		yPos = (int)hitBoxTileIndex.y - 1;
 		for (xPos = (int)hitBoxTileIndex.x; xPos < hitBoxTileIndex.x + hitBoxTileWidth; xPos++) {
-			if (xPos >= 0 && yPos >= 0 && layer.getCell(xPos, yPos) != null) { returnValue.add(new TileContainer(PositionType.LOWER, hitBox, layer.getCell(xPos, yPos), xPos, yPos)); }
+			if (xPos >= 0 && yPos >= 0 && layer.getCell(xPos, yPos) != null) { returnValue.add(new TileContainer(PositionType.LOWER, layer.getCell(xPos, yPos), xPos, yPos)); }
 		}
-		yPos = (int)hitBoxTileIndex.y + 1;
+		yPos = (int)hitBoxTileIndex.y + hitBoxTileHeight;
 		for (xPos = (int)hitBoxTileIndex.x; xPos < hitBoxTileIndex.x + hitBoxTileWidth; xPos++) {
-			if (xPos >= 0 && yPos >= 0 && layer.getCell(xPos, yPos) != null) { returnValue.add(new TileContainer(PositionType.UPPER, hitBox, layer.getCell(xPos, yPos), xPos, yPos)); }
-		}
-		xPos = (int)hitBoxTileIndex.x - 1;
-		for (yPos = (int)hitBoxTileIndex.y - hitBoxTileHeight; yPos < hitBoxTileIndex.y; yPos++) {
-			if (xPos >= 0 && yPos >= 0 && layer.getCell(xPos, yPos) != null) { returnValue.add(new TileContainer(PositionType.LEFT, hitBox, layer.getCell(xPos, yPos), xPos, yPos)); }
-		}
-		xPos = (int)hitBoxTileIndex.x + hitBoxTileWidth;
-		for (yPos = (int)hitBoxTileIndex.y - hitBoxTileHeight; yPos < hitBoxTileIndex.y; yPos++) {
-			if (xPos >= 0 && yPos >= 0 && layer.getCell(xPos, yPos) != null) { returnValue.add(new TileContainer(PositionType.RIGHT, hitBox, layer.getCell(xPos, yPos), xPos, yPos)); }
+			if (xPos >= 0 && yPos >= 0 && layer.getCell(xPos, yPos) != null) { returnValue.add(new TileContainer(PositionType.UPPER, layer.getCell(xPos, yPos), xPos, yPos)); }
 		}
 		
-		yPos = (int)hitBoxTileIndex.y + 1;
 		xPos = (int)hitBoxTileIndex.x - 1;
-		if (xPos >= 0 && yPos >= 0 && layer.getCell(xPos, yPos) != null) { returnValue.add(new TileContainer(PositionType.DIAGUPPERLEFT, hitBox, layer.getCell(xPos, yPos), xPos, yPos)); }
-		
-		yPos = (int)hitBoxTileIndex.y + 1;
+		for (yPos = (int)hitBoxTileIndex.y; yPos < hitBoxTileIndex.y + hitBoxTileHeight; yPos++) {
+			if (xPos >= 0 && yPos >= 0 && layer.getCell(xPos, yPos) != null) { returnValue.add(new TileContainer(PositionType.LEFT, layer.getCell(xPos, yPos), xPos, yPos)); }
+		}
 		xPos = (int)hitBoxTileIndex.x + hitBoxTileWidth;
-		if (xPos >= 0 && yPos >= 0 && layer.getCell(xPos, yPos) != null) { returnValue.add(new TileContainer(PositionType.DIAGUPPERRIGHT, hitBox, layer.getCell(xPos, yPos), xPos, yPos)); }
+		for (yPos = (int)hitBoxTileIndex.y; yPos < hitBoxTileIndex.y + hitBoxTileHeight; yPos++) {
+			if (xPos >= 0 && yPos >= 0 && layer.getCell(xPos, yPos) != null) { returnValue.add(new TileContainer(PositionType.RIGHT, layer.getCell(xPos, yPos), xPos, yPos)); }
+		}
 		
-		yPos = (int)hitBoxTileIndex.y - hitBoxTileHeight;
+		yPos = (int)hitBoxTileIndex.y + hitBoxTileHeight;
 		xPos = (int)hitBoxTileIndex.x - 1;
-		if (xPos >= 0 && yPos >= 0 && layer.getCell(xPos, yPos) != null) { returnValue.add(new TileContainer(PositionType.DIAGLOWERLEFT, hitBox, layer.getCell(xPos, yPos), xPos, yPos)); }
+		if (xPos >= 0 && yPos >= 0 && layer.getCell(xPos, yPos) != null) { returnValue.add(new TileContainer(PositionType.DIAGUPPERLEFT, layer.getCell(xPos, yPos), xPos, yPos)); }
 		
-		yPos = (int)hitBoxTileIndex.y - hitBoxTileHeight;
+		yPos = (int)hitBoxTileIndex.y + hitBoxTileHeight;
 		xPos = (int)hitBoxTileIndex.x + hitBoxTileWidth;
-		if (xPos >= 0 && yPos >= 0 && layer.getCell(xPos, yPos) != null) { returnValue.add(new TileContainer(PositionType.DIAGLOWERRIGHT, hitBox, layer.getCell(xPos, yPos), xPos, yPos)); }
+		if (xPos >= 0 && yPos >= 0 && layer.getCell(xPos, yPos) != null) { returnValue.add(new TileContainer(PositionType.DIAGUPPERRIGHT, layer.getCell(xPos, yPos), xPos, yPos)); }
 		
+		yPos = (int)hitBoxTileIndex.y - 1;
+		xPos = (int)hitBoxTileIndex.x - 1;
+		if (xPos >= 0 && yPos >= 0 && layer.getCell(xPos, yPos) != null) { returnValue.add(new TileContainer(PositionType.DIAGLOWERLEFT, layer.getCell(xPos, yPos), xPos, yPos)); }
+		
+		yPos = (int)hitBoxTileIndex.y - 1;
+		xPos = (int)hitBoxTileIndex.x + hitBoxTileWidth;
+		if (xPos >= 0 && yPos >= 0 && layer.getCell(xPos, yPos) != null) { returnValue.add(new TileContainer(PositionType.DIAGLOWERRIGHT, layer.getCell(xPos, yPos), xPos, yPos)); }
+
 		return returnValue;
 	}
 	
@@ -150,7 +183,7 @@ public class MarioStage extends Stage {
 
 			PositionType resolvePosition;
 			
-			Rectangle collisionDepth = tileHitBox.checkCollision(tileContainer.getRelativeHitBox());
+			Rectangle collisionDepth = tileHitBox.checkCollision(actor.createHitBox());
 			
 			if (collisionDepth != null) {
 				resolvePosition = tileContainer.getRelativePosition();
@@ -160,7 +193,7 @@ public class MarioStage extends Stage {
 					// check previous hit box location to determine desired collision for this update
 					
 					if (resolvePosition == PositionType.DIAGLOWERLEFT || resolvePosition == PositionType.DIAGLOWERRIGHT) {
-						if ((actor.getY() > tileHitBox.getPositionY())) {
+						if ((actor.getY() < tileHitBox.getPositionY())) {
 							if (resolvePosition == PositionType.DIAGLOWERLEFT) {
 								resolvePosition = PositionType.LEFT;
 							} else {

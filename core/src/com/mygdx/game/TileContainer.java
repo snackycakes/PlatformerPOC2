@@ -10,11 +10,10 @@ public class TileContainer {
 	private Cell tileCell;
 	private int xIndex, yIndex;
 	
-	public TileContainer(PositionType relativePosition, HitBox relativeHitBox, Cell tileCell, int xIndex, int yIndex) {
+	public TileContainer(PositionType relativePosition, Cell tileCell, int xIndex, int yIndex) {
 		super();
 		this.relativePosition = relativePosition;
 		this.tileCell = tileCell;
-		this.relativeHitBox = relativeHitBox;
 		this.xIndex = xIndex;
 		this.yIndex = yIndex;		
 	}
@@ -33,14 +32,6 @@ public class TileContainer {
 
 	public void setTileCell(Cell tileCell) {
 		this.tileCell = tileCell;
-	}
-
-	public HitBox getRelativeHitBox() {
-		return relativeHitBox;
-	}
-
-	public void setRelativeHitBox(HitBox relativeHitBox) {
-		this.relativeHitBox = relativeHitBox;
 	}
 
 	public int getxIndex() {
