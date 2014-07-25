@@ -172,9 +172,9 @@ public class MarioGame implements ApplicationListener, InputProcessor {
 			
 		case Keys.L:
 			if (Gdx.input.isKeyPressed(Keys.SHIFT_LEFT) || Gdx.input.isKeyPressed(Keys.SHIFT_RIGHT))
-				playerMario.setJumpMaxFrames(playerMario.getJumpMaxFrames() - 1f);
+				playerMario.setJumpMaxTime(playerMario.getJumpMaxTime() - 1f);
 			else
-				playerMario.setJumpMaxFrames(playerMario.getJumpMaxFrames() + 1f);
+				playerMario.setJumpMaxTime(playerMario.getJumpMaxTime() + 1f);
 			break;
 			
 		case Keys.M:

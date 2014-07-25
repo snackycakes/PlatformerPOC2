@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
@@ -12,6 +13,8 @@ public class MarioActor extends Actor {
 	private Vector2 velocity = new Vector2();
 	private boolean desiredPositionAdjusted = false;
 	private HashMap<String, Force> appliedForces = new HashMap<String, Force>();
+	private TextureRegion activeSprite;
+	
 	private boolean grounded = false;
 	private boolean isPawn = false;
 	private boolean isVisible = true;
@@ -19,17 +22,23 @@ public class MarioActor extends Actor {
 
 	private float movementForce = 6f;
 	private float movementAccl = .36f;
+
 	private float jumpForce = 9f;
 	private float jumpInitialForce = 8.4f;
 	private float jumpAcceleration = 6f;
-	private float jumpMaxFrames = 20f;
-	private float jumpFrameCount = 0f;
+	private float jumpMaxTime = .5f;
+	private float jumpElapsedTime = 0f;
 	private float jumpMovementCoefficent = .4f;
 	
 	private boolean applyJumpForce = false;	
 	private boolean isMovingRight = false;
 	private boolean isMovingLeft = false;
 	private boolean isJumping = false;
+	
+	public MarioActor() {
+		super();
+		loadAssets();
+	}
 	
 	public void applyForce(String forceName, Force force) {
 		appliedForces.put(forceName, force);
@@ -69,6 +78,10 @@ public class MarioActor extends Actor {
 
 	public void setGrounded(boolean grounded) {
 		this.grounded = grounded;
+		
+		if (!applyJumpForce && grounded) {
+			isJumping = false;	
+		}
 	}
 	
 	public void commitDesiredPosition() {
@@ -100,10 +113,10 @@ public class MarioActor extends Actor {
 			this.isJumping = true;
 			this.applyJumpForce = true;
 			this.grounded = false;
-			this.jumpFrameCount = 0;
+			this.jumpElapsedTime = 0;
 		} else if (!isJumping) {
 			this.applyJumpForce = false;
-			this.jumpFrameCount = 0;
+			this.jumpElapsedTime = 0;
 		}
 	}
 		
@@ -127,15 +140,15 @@ public class MarioActor extends Actor {
 		}
 		
 		if (applyJumpForce) {
-			if (jumpFrameCount == 0) {
+			if (jumpElapsedTime == 0) {
 				applyForce("jump", 0, jumpForce, 0, jumpInitialForce);
 			} else {
 				applyForce("jump", 0, jumpForce, 0, jumpAcceleration);
 			}
-			jumpFrameCount++;
-			if (jumpFrameCount >= jumpMaxFrames) {
+			jumpElapsedTime += Gdx.graphics.getDeltaTime();
+			if (jumpElapsedTime >= jumpMaxTime) {
 				applyJumpForce = false;
-				jumpFrameCount = 0;			
+				jumpElapsedTime = 0;			
 			}
 		}
 		
@@ -192,7 +205,7 @@ public class MarioActor extends Actor {
 	public void setVelocityY(float speedY) {
 		velocity.y = speedY;
 		applyJumpForce = false;
-		jumpFrameCount = 0;
+		jumpElapsedTime = 0;
 	}
 	
 	public void setVelocityX(float speedX) {
@@ -270,21 +283,13 @@ public class MarioActor extends Actor {
 	public void setJumpAcceleration(float jumpAcceleration) {
 		this.jumpAcceleration = jumpAcceleration;
 	}
-
-	public float getJumpMaxFrames() {
-		return jumpMaxFrames;
+	
+	public float getJumpMaxTime() {
+		return(jumpMaxTime);
 	}
 
-	public void setJumpMaxFrames(float jumpMaxFrames) {
-		this.jumpMaxFrames = jumpMaxFrames;
-	}
-
-	public float getJumpFrameCount() {
-		return jumpFrameCount;
-	}
-
-	public void setJumpFrameCount(float jumpFrameCount) {
-		this.jumpFrameCount = jumpFrameCount;
+	public void setJumpMaxTime(float jumpMaxTime) {
+		this.jumpMaxTime = jumpMaxTime;
 	}
 
 	public float getJumpMovementCoefficent() {
@@ -293,5 +298,17 @@ public class MarioActor extends Actor {
 
 	public void setJumpMovementCoefficent(float jumpMovementCoefficent) {
 		this.jumpMovementCoefficent = jumpMovementCoefficent;
+	}
+	
+	public void loadAssets() {
+
+	}
+
+	public TextureRegion getActiveSprite() {
+		return activeSprite;
+	}
+
+	public void setActiveSprite(TextureRegion activeSprite) {
+		this.activeSprite = activeSprite;
 	}
 }

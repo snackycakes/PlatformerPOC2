@@ -24,9 +24,6 @@ public class Assets {
 		Assets.Textures.SmallMarioWalkingLeft1 = marioAtlas.findRegion("SmallMarioWalkingLeft1");
 		Assets.Textures.SmallMarioWalkingLeft2 = marioAtlas.findRegion("SmallMarioWalkingLeft2");
 		Assets.Textures.SmallMarioWalkingLeft3 = marioAtlas.findRegion("SmallMarioWalkingLeft3");	
-		
-		Assets.Animations.SmallMarioWalkingRight = new Animation(1/8f, marioAtlas.findRegion("SmallMarioWalkingRight1"), marioAtlas.findRegion("SmallMarioWalkingRight2"), marioAtlas.findRegion("SmallMarioWalkingRight3"));
-		Assets.Animations.SmallMarioWalkingRight.setPlayMode(PlayMode.LOOP_PINGPONG);
 	}
 	
 	public static class Textures {
@@ -42,11 +39,6 @@ public class Assets {
 		public static TextureRegion SmallMarioWalkingLeft1;
 		public static TextureRegion SmallMarioWalkingLeft2;
 		public static TextureRegion SmallMarioWalkingLeft3;
-	}
-	
-	public static class Animations {	
-		public static Animation SmallMarioWalkingRight;
-		public static Animation SmallMarioWalkingLeft;
 	}
 	
 	public static void dispose() {

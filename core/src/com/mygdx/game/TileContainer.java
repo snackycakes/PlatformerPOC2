@@ -6,7 +6,6 @@ public class TileContainer {
 	public enum PositionType {LOWER, UPPER, LEFT, RIGHT, DIAGLOWERLEFT, DIAGLOWERRIGHT, DIAGUPPERLEFT, DIAGUPPERRIGHT}
 	
 	private PositionType relativePosition;
-	private HitBox relativeHitBox;
 	private Cell tileCell;
 	private int xIndex, yIndex;
 	
