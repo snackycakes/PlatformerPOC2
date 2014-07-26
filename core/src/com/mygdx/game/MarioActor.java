@@ -179,7 +179,7 @@ public class MarioActor extends Actor {
 		appliedForces.clear();
 		
 		this.desiredPosition.set(getX(), getY());
-		this.desiredPosition.add(velocity.cpy().scl(Gdx.graphics.getDeltaTime()));
+		this.desiredPosition.add(velocity.cpy().scl(MarioGame.deltaTime));
 	}
 	
 	public HitBox createHitBox() {

@@ -38,6 +38,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class MarioGame implements ApplicationListener, InputProcessor {
 	
+	public static float deltaTime = 0;
     public static float elapsedTime = 0;
     
     private MarioStage stage;
@@ -79,7 +80,8 @@ public class MarioGame implements ApplicationListener, InputProcessor {
 		Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 0);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
-		MarioGame.elapsedTime += Gdx.graphics.getDeltaTime();
+		MarioGame.deltaTime = Math.min(3/60f, Gdx.graphics.getDeltaTime());
+		MarioGame.elapsedTime += MarioGame.deltaTime;
 		
         stage.draw();
     }

@@ -2,6 +2,7 @@ package com.mygdx.game;
 
 import java.util.ArrayList;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
@@ -9,6 +10,8 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.maps.tiled.tiles.AnimatedTiledMapTile;
+import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -34,6 +37,7 @@ public class MarioStage extends Stage {
 
 	@Override
 	public void draw() {
+		//if (Gdx.graphics.getDeltaTime())
 		update();
 		
 		getCamera().update();		
@@ -193,7 +197,7 @@ public class MarioStage extends Stage {
 					// check previous hit box location to determine desired collision for this update
 					
 					if (resolvePosition == PositionType.DIAGLOWERLEFT || resolvePosition == PositionType.DIAGLOWERRIGHT) {
-						if ((actor.getY() < tileHitBox.getPositionY())) {
+						if ((actor.getY() < tileHitBox.getPositionY() + tileHitBox.getSizeY())) {
 							if (resolvePosition == PositionType.DIAGLOWERLEFT) {
 								resolvePosition = PositionType.LEFT;
 							} else {
@@ -223,11 +227,10 @@ public class MarioStage extends Stage {
 					case UPPER:
 						actor.setDesiredPositionY(actor.getDesiredPositionY() - collisionDepth.getHeight());
 						actor.setVelocityY(0);
-						/*
-						if (actor.isPawn() && tileContainer.getTile() != null && tileContainer.getTile().isDestructible()) {
-							tileContainer.getTile().destroyNode();
-						}
-						*/
+						
+						StaticTiledMapTile bumpedTile = new StaticTiledMapTile(tileContainer.getTileCell().getTile().getTextureRegion());
+						bumpedTile.setOffsetY(10);
+						tileContainer.getTileCell().setTile(bumpedTile);
 						break;
 					case LEFT:
 						actor.setDesiredPositionX(actor.getDesiredPositionX() + collisionDepth.getWidth());
