@@ -119,12 +119,11 @@ public class MarioActor extends Actor {
 			this.jumpElapsedTime = 0;
 		}
 	}
-		
-	@Override
-	public void draw(Batch batch, float parentAlpha) {
-	}
 	
-	public void update() {
+	@Override
+	public void act(float delta) {
+		super.act(delta);
+		
 		float movementCoefficent = 1;
 		
 		if (!grounded) {
@@ -179,7 +178,7 @@ public class MarioActor extends Actor {
 		appliedForces.clear();
 		
 		this.desiredPosition.set(getX(), getY());
-		this.desiredPosition.add(velocity.cpy().scl(MarioGame.deltaTime));
+		this.desiredPosition.add(velocity.cpy().scl(delta));
 	}
 	
 	public HitBox createHitBox() {

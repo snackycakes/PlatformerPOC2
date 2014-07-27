@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" width="100" height="15" tilewidth="16" tileheight="16">
- <tileset firstgid="1" name="Background" tilewidth="1600" tileheight="240">
-  <image source="background.png" width="1600" height="240"/>
- </tileset>
- <tileset firstgid="2" name="smb_blocks" tilewidth="16" tileheight="16">
+ <tileset firstgid="1" name="smb_blocks" tilewidth="16" tileheight="16">
   <image source="smb_blocks.png" width="80" height="80"/>
   <tile id="4">
    <properties>
@@ -11,14 +8,9 @@
    </properties>
   </tile>
  </tileset>
- <layer name="Background" width="100" height="15">
-  <data encoding="base64" compression="zlib">
-   eJztzjENAAAIA7Dh3zT3FBCSVkETAAAAAAA+musAZQEZAAAC
-  </data>
- </layer>
  <layer name="Collision" width="100" height="15">
   <data encoding="base64" compression="zlib">
-   eJzt1LEJACAMBMAU4gjuP6qFjZ1aGfEOnjRfBAKJAACAv5TbCwAs1Bi/ap4AWbTNnPYz5gXukUsHf5UJ6w==
+   eJzt1DEKwCAQRNGF4BH2/le1sNFtlID6N5kHkibFxA8x+we/PUAG6sGiHizqwaIeLOrBkrnHc3vABpl7fJF6sGTsUaz9q/rnG26876ftOcXDoSBtOSF2oHUhbFgxu8d4n6vvE08G6sFSAYS+C6o=
   </data>
  </layer>
  <objectgroup name="Object" width="100" height="15">

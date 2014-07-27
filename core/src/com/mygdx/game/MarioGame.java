@@ -50,8 +50,7 @@ public class MarioGame implements ApplicationListener, InputProcessor {
 
 		// create an orthographic camera, shows us 16 x 15 units of the world
     	OrthographicCamera camera = new OrthographicCamera();
-		camera.setToOrtho(false, 16, 15);
-		camera.update();    	  	
+		camera.setToOrtho(false, 16, 15); 	  	
     	
 		// load the map, set the unit scale to 1/16 (1 unit == 16 pixels)
 		TiledMap tiledMap = new TmxMapLoader().load("data/smb_stage1.tmx");
@@ -62,8 +61,8 @@ public class MarioGame implements ApplicationListener, InputProcessor {
         
     	playerMario = new Mario();
     	playerMario.setPosition(0, 10);
-        
         stage.addActor(playerMario);
+        stage.setPawn(playerMario);
         
         Gdx.input.setInputProcessor(this);
     }
@@ -83,6 +82,7 @@ public class MarioGame implements ApplicationListener, InputProcessor {
 		MarioGame.deltaTime = Math.min(3/60f, Gdx.graphics.getDeltaTime());
 		MarioGame.elapsedTime += MarioGame.deltaTime;
 		
+		stage.act();
         stage.draw();
     }
 

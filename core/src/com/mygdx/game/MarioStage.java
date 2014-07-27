@@ -1,6 +1,7 @@
 package com.mygdx.game;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -21,37 +22,54 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.TileContainer.PositionType;
 
 public class MarioStage extends Stage {
+	private final static float CAMERASCROLLX = 13f;
 	private TiledMap tiledMap;
 	private OrthogonalTiledMapRenderer tileRenderer;
-	protected float gravity = -9f;
-	protected float gravityAccl = -1f;
-	protected float frictionGround = 0.2f;
-	protected float frictionAir = 0.00f;
-	protected Vector2 tileSize = new Vector2(16, 16);
+	private float gravity = -9f;
+	private float gravityAccl = -1f;
+	private float frictionGround = 0.2f;
+	private float frictionAir = 0.00f;
+	private Mario pawn;
+	private ArrayList<MarioStaticTile> updatedTiles = new ArrayList<MarioStaticTile>();
 
 	public MarioStage(Viewport viewport, TiledMap tiledMap, OrthogonalTiledMapRenderer tileRenderer) {
 		super(viewport);
 		this.tiledMap = tiledMap;
 		this.tileRenderer = tileRenderer;
 	}
-
-	@Override
-	public void draw() {
-		//if (Gdx.graphics.getDeltaTime())
-		update();
-		
-		getCamera().update();		
-		tileRenderer.render();
-		
-		super.draw();
-	}
 	
-	public void update() {
+	@Override
+	public void act() {
+		// update Actors
 		for (Actor actor : this.getActors()) {
 			if (actor instanceof MarioActor) {
 				updateActor((MarioActor)actor);
 			}
 		}
+		
+		// check for tiles that have been manipulated by collisions nnd need updates
+	    Iterator<MarioStaticTile> iterator = updatedTiles.iterator();
+	    while (iterator.hasNext()) {
+	    	MarioStaticTile tile = iterator.next();
+	    	tile.update();
+	    	if (!tile.needsUpdates()) {
+	    		iterator.remove();
+	    	}
+	    }	
+	}
+
+	@Override
+	public void draw() {		
+		float pawnOffset = pawn.getX() - getCamera().position.x;
+		if (pawnOffset > 0) {
+			getCamera().position.x += pawnOffset;
+		}
+		
+		getCamera().update();		
+		tileRenderer.render();
+		tileRenderer.setView((OrthographicCamera)getCamera());
+		
+		super.draw();
 	}
 	
 	public void updateActor(MarioActor actor) {
@@ -81,7 +99,7 @@ public class MarioStage extends Stage {
 			}
 		}
 		
-		actor.update();
+		actor.act(MarioGame.deltaTime);
 		
 		// check and resolve tile collisions
 		resolveTileCollisions(actor);		
@@ -181,8 +199,8 @@ public class MarioStage extends Stage {
 		boolean isMobGrounded = false;
 		
 		for (TileContainer tileContainer : surroundingTiles) {	
-			//Cell cell = tileContainer.getTileCell();
-			//TiledMapTile tile = cell.getTile();
+			Cell cell = tileContainer.getTileCell();
+			TiledMapTile tile = cell.getTile();
 			HitBox tileHitBox = new HitBox(tileContainer.getxIndex(), tileContainer.getyIndex(), 1, 1);
 
 			PositionType resolvePosition;
@@ -228,9 +246,14 @@ public class MarioStage extends Stage {
 						actor.setDesiredPositionY(actor.getDesiredPositionY() - collisionDepth.getHeight());
 						actor.setVelocityY(0);
 						
-						StaticTiledMapTile bumpedTile = new StaticTiledMapTile(tileContainer.getTileCell().getTile().getTextureRegion());
-						bumpedTile.setOffsetY(10);
+						if (!(tile instanceof MarioStaticTile) || !((MarioStaticTile)tile).isBumped()) {
+							
+						}
+						MarioStaticTile bumpedTile = new MarioStaticTile(tile.getTextureRegion());
+						bumpedTile.bump();
+						updatedTiles.add(bumpedTile);
 						tileContainer.getTileCell().setTile(bumpedTile);
+						
 						break;
 					case LEFT:
 						actor.setDesiredPositionX(actor.getDesiredPositionX() + collisionDepth.getWidth());
@@ -273,5 +296,13 @@ public class MarioStage extends Stage {
 
 	public void setTileRenderer(OrthogonalTiledMapRenderer tileRenderer) {
 		this.tileRenderer = tileRenderer;
+	}
+
+	public Mario getPawn() {
+		return pawn;
+	}
+
+	public void setPawn(Mario pawn) {
+		this.pawn = pawn;
 	}
 }
