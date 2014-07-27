@@ -29,12 +29,13 @@ public class MarioStage extends Stage {
 	private float gravityAccl = -1f;
 	private float frictionGround = 0.2f;
 	private float frictionAir = 0.00f;
+	private TiledMapTileLayer collisionLayer = null;
 	private Mario pawn;
 	private ArrayList<MarioStaticTile> updatedTiles = new ArrayList<MarioStaticTile>();
 
 	public MarioStage(Viewport viewport, TiledMap tiledMap, OrthogonalTiledMapRenderer tileRenderer) {
 		super(viewport);
-		this.tiledMap = tiledMap;
+		this.setTileMap(tiledMap);
 		this.tileRenderer = tileRenderer;
 	}
 	
@@ -155,7 +156,7 @@ public class MarioStage extends Stage {
 		int hitBoxTileHeight = (int)hitBox.getSizeY();
 		int xPos, yPos;
 		
-		TiledMapTileLayer layer = (TiledMapTileLayer)tiledMap.getLayers().get("Collision");
+		TiledMapTileLayer layer = collisionLayer;
 		
 		yPos = (int)hitBoxTileIndex.y - 1;
 		for (xPos = (int)hitBoxTileIndex.x; xPos < hitBoxTileIndex.x + hitBoxTileWidth; xPos++) {
@@ -246,13 +247,25 @@ public class MarioStage extends Stage {
 						actor.setDesiredPositionY(actor.getDesiredPositionY() - collisionDepth.getHeight());
 						actor.setVelocityY(0);
 						
-						if (!(tile instanceof MarioStaticTile) || !((MarioStaticTile)tile).isBumped()) {
+						if (actor.bumpsTiles()) {
+							MarioStaticTile marioTile = null;
+							
+							if (tile instanceof MarioStaticTile) {
+								marioTile = (MarioStaticTile)tile;
+							} else {
+								marioTile = new MarioStaticTile(tile.getTextureRegion());
+							}
+							
+							if (!marioTile.isBumped()) {
+								marioTile.bump();
+								updatedTiles.add(marioTile);
+								cell.setTile(marioTile);
+							}	
+						}
+						
+						if (actor.breaksTiles()) {
 							
 						}
-						MarioStaticTile bumpedTile = new MarioStaticTile(tile.getTextureRegion());
-						bumpedTile.bump();
-						updatedTiles.add(bumpedTile);
-						tileContainer.getTileCell().setTile(bumpedTile);
 						
 						break;
 					case LEFT:
@@ -288,6 +301,7 @@ public class MarioStage extends Stage {
 
 	public void setTileMap(TiledMap tiledMap) {
 		this.tiledMap = tiledMap;
+		collisionLayer = (TiledMapTileLayer)tiledMap.getLayers().get("Collision");
 	}
 
 	public OrthogonalTiledMapRenderer getTileRenderer() {

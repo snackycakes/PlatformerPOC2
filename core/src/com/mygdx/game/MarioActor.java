@@ -17,6 +17,8 @@ public class MarioActor extends Actor {
 	
 	private boolean grounded = false;
 	private boolean isPawn = false;
+	private boolean bumpsTiles = false;
+	private boolean breaksTiles = false;
 	private boolean isVisible = true;
 	private boolean isInView = true;
 
@@ -309,5 +311,21 @@ public class MarioActor extends Actor {
 
 	public void setActiveSprite(TextureRegion activeSprite) {
 		this.activeSprite = activeSprite;
+	}
+
+	public boolean bumpsTiles() {
+		return bumpsTiles;
+	}
+
+	public void setBumpsTiles(boolean bumpsTiles) {
+		this.bumpsTiles = bumpsTiles;
+	}
+
+	public boolean breaksTiles() {
+		return breaksTiles;
+	}
+
+	public void setBreaksTiles(boolean breaksTiles) {
+		this.breaksTiles = breaksTiles;
 	}
 }

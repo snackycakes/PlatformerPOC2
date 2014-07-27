@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 public class Mario extends MarioActor {
 	
 	private boolean isFacingRight = true;
+	private boolean isBig = false;
 	
 	private TextureRegion standingRight;
 	private TextureRegion slidingRight;
@@ -28,8 +29,22 @@ public class Mario extends MarioActor {
 
         setHeight(1);
         setWidth(1);
+        setPawn(true);
         
         setSmallMarioSprites();
+	}	
+
+	@Override
+	public void act(float delta) {
+		super.act(delta);
+		
+		if (isBig) {
+			setBumpsTiles(false);
+			setBreaksTiles(true);
+		} else {
+			setBumpsTiles(true);
+			setBreaksTiles(false);
+		}
 	}
 
 	@Override
@@ -95,5 +110,13 @@ public class Mario extends MarioActor {
 		movingLeft = smallMarioWalkingLeft;
 		slidingLeft = Assets.Textures.SmallMarioSlidingLeft;
 		jumpingLeft = Assets.Textures.SmallMarioJumpingLeft;
+	}
+	
+	public boolean isBig() {
+		return isBig;
+	}
+
+	public void setBig(boolean isBig) {
+		this.isBig = isBig;
 	}
 }
