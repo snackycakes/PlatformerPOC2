@@ -17,6 +17,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.TileContainer.PositionType;
@@ -37,6 +38,35 @@ public class MarioStage extends Stage {
 		super(viewport);
 		this.setTileMap(tiledMap);
 		this.tileRenderer = tileRenderer;
+	}
+	
+	private void ConfigureTileMap() {
+		collisionLayer = (TiledMapTileLayer)tiledMap.getLayers().get("Collision");
+		
+		float mapHeight = collisionLayer.getHeight();
+		float mapWidth = collisionLayer.getWidth();
+		
+		// look for animated tile definitions and replace placeholders with animated tiles
+		for (int i = 0; i < mapWidth; i++) {
+			for (int j = 0; j < mapHeight; j++) {
+				Cell cell = collisionLayer.getCell(i, j);
+				if (cell != null) {
+					if (cell.getTile().getProperties().get("Animation") != null) {
+						String animationName = (String)cell.getTile().getProperties().get("Animation");
+						Array<StaticTiledMapTile> animationFrames = new Array<StaticTiledMapTile>();
+
+						for (TiledMapTile tile : tiledMap.getTileSets().getTileSet("smb_blocks")) {
+							if (tile.getProperties().get("Animation") != null && animationName.equals((String)tile.getProperties().get("Animation"))) {
+								animationFrames.add((StaticTiledMapTile)tile);
+							}
+						}
+						
+						AnimatedTiledMapTile animatedTile = new AnimatedTiledMapTile(1/3f, animationFrames);
+						cell.setTile(animatedTile);
+					}
+				}
+			}
+		}
 	}
 	
 	@Override
@@ -301,7 +331,7 @@ public class MarioStage extends Stage {
 
 	public void setTileMap(TiledMap tiledMap) {
 		this.tiledMap = tiledMap;
-		collisionLayer = (TiledMapTileLayer)tiledMap.getLayers().get("Collision");
+		ConfigureTileMap();
 	}
 
 	public OrthogonalTiledMapRenderer getTileRenderer() {
