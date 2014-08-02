@@ -29,6 +29,7 @@ public class Mario extends MarioActor {
 
         setHeight(1);
         setWidth(1);
+        setCanStomp(true);
         setPawn(true);
         
         setSmallMarioSprites();
@@ -85,7 +86,7 @@ public class Mario extends MarioActor {
 			}
 		}
 		
-		batch.draw(getActiveSprite(), getX(), getY(), getWidth(), getHeight());
+		super.draw(batch, parentAlpha);
 	}
 
 	@Override

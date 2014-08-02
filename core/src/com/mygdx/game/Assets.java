@@ -7,7 +7,8 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class Assets {
-	public static TextureAtlas marioAtlas = new TextureAtlas(Gdx.files.internal("data/smb_mario_sheet.atlas"));
+	public static TextureAtlas marioAtlas;
+	public static TextureAtlas enemyAtlas;
 	
 	public static void load() {
 		TextureAtlas marioAtlas = new TextureAtlas(Gdx.files.internal("data/smb_mario_sheet.atlas"));
@@ -24,6 +25,12 @@ public class Assets {
 		Assets.Textures.SmallMarioWalkingLeft1 = marioAtlas.findRegion("SmallMarioWalkingLeft1");
 		Assets.Textures.SmallMarioWalkingLeft2 = marioAtlas.findRegion("SmallMarioWalkingLeft2");
 		Assets.Textures.SmallMarioWalkingLeft3 = marioAtlas.findRegion("SmallMarioWalkingLeft3");	
+		
+		TextureAtlas enemyAtlas = new TextureAtlas(Gdx.files.internal("data/smb_enemies_sheet.atlas"));
+		
+		Assets.Textures.GoombaWalking1 = enemyAtlas.findRegion("GoombaWalking1");
+		Assets.Textures.GoombaWalking2 = enemyAtlas.findRegion("GoombaWalking2");
+		Assets.Textures.GoombaSquashed = enemyAtlas.findRegion("GoombaSquashed");
 	}
 	
 	public static class Textures {
@@ -39,6 +46,9 @@ public class Assets {
 		public static TextureRegion SmallMarioWalkingLeft1;
 		public static TextureRegion SmallMarioWalkingLeft2;
 		public static TextureRegion SmallMarioWalkingLeft3;
+		public static TextureRegion GoombaWalking1;
+		public static TextureRegion GoombaWalking2;
+		public static TextureRegion GoombaSquashed;
 	}
 	
 	public static void dispose() {

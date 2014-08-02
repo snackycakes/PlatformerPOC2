@@ -21,6 +21,11 @@ public class MarioActor extends Actor {
 	private boolean breaksTiles = false;
 	private boolean isVisible = true;
 	private boolean isInView = true;
+	
+	private boolean isEnemy = false;
+	private boolean isDead = false;
+	private boolean canStomp = false;
+	private boolean canBeStomped = false;
 
 	private float movementForce = 6f;
 	private float movementAccl = .36f;
@@ -183,6 +188,14 @@ public class MarioActor extends Actor {
 		this.desiredPosition.add(velocity.cpy().scl(delta));
 	}
 	
+	@Override
+	public void draw(Batch batch, float parentAlpha) {
+		super.draw(batch, parentAlpha);
+		if (getActiveSprite() != null) {
+			batch.draw(getActiveSprite(), getX(), getY(), getWidth(), getHeight());
+		}
+	}
+
 	public HitBox createHitBox() {
 		return new HitBox(desiredPosition, new Vector2(getWidth(), getHeight()));
 	}
@@ -328,4 +341,38 @@ public class MarioActor extends Actor {
 	public void setBreaksTiles(boolean breaksTiles) {
 		this.breaksTiles = breaksTiles;
 	}
+	
+	public void kill() {
+		this.isDead = true;
+	}
+
+	public boolean isEnemy() {
+		return isEnemy;
+	}
+
+	public void setEnemy(boolean isEnemy) {
+		this.isEnemy = isEnemy;
+	}
+
+	public boolean isDead() {
+		return isDead;
+	}
+
+	public boolean canStomp() {
+		return canStomp;
+	}
+
+	public void setCanStomp(boolean canStomp) {
+		this.canStomp = canStomp;
+	}
+
+	public boolean canBeStomped() {
+		return canBeStomped;
+	}
+
+	public void setCanBeStomped(boolean canBeStomped) {
+		this.canBeStomped = canBeStomped;
+	}
+	
+	
 }

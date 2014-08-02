@@ -1,0 +1,26 @@
+
+smb_enemies_sheet.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+GoombaWalking1
+  rotate: false
+  xy: 0, 4
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+GoombaWalking2
+  rotate: false
+  xy: 30, 4
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+GoombaSquashed
+  rotate: false
+  xy: 60, 0
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1

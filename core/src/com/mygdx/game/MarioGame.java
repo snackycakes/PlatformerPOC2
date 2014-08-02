@@ -55,14 +55,24 @@ public class MarioGame implements ApplicationListener, InputProcessor {
 		// load the map, set the unit scale to 1/16 (1 unit == 16 pixels)
 		TiledMap tiledMap = new TmxMapLoader().load("data/smb_stage1.tmx");
 		OrthogonalTiledMapRenderer tileRenderer = new OrthogonalTiledMapRenderer(tiledMap, 1/16f);
-		tileRenderer.setView(camera);	
 		
+		// set stage viewport to match tile camera
     	stage = new MarioStage(new FitViewport(16, 15, camera), tiledMap, tileRenderer);    	
         
     	playerMario = new Mario();
     	playerMario.setPosition(0, 10);
         stage.addActor(playerMario);
         stage.setPawn(playerMario);
+        
+        Goomba testGoomba = new Goomba();
+        testGoomba.setPosition(6, 2);        
+        stage.addActor(testGoomba);
+        Goomba testGoomba2 = new Goomba();
+        testGoomba2.setPosition(7, 2);        
+        stage.addActor(testGoomba2);
+        Goomba testGoomba3 = new Goomba();
+        testGoomba3.setPosition(8, 2);        
+        stage.addActor(testGoomba3);
         
         Gdx.input.setInputProcessor(this);
     }

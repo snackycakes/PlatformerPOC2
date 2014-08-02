@@ -78,7 +78,7 @@ public class MarioStage extends Stage {
 			}
 		}
 		
-		// check for tiles that have been manipulated by collisions nnd need updates
+		// check for tiles that have been manipulated by collisions and need updates
 	    Iterator<MarioStaticTile> iterator = updatedTiles.iterator();
 	    while (iterator.hasNext()) {
 	    	MarioStaticTile tile = iterator.next();
@@ -132,8 +132,8 @@ public class MarioStage extends Stage {
 		
 		actor.act(MarioGame.deltaTime);
 		
-		// check and resolve tile collisions
-		resolveTileCollisions(actor);		
+		resolveActorCollisions(actor);
+		resolveTileCollisions(actor);
 		actor.commitDesiredPosition();
 	}
 	
@@ -315,6 +315,28 @@ public class MarioStage extends Stage {
 		}
 		
 		actor.setGrounded(isMobGrounded);
+	}
+	
+	public void resolveActorCollisions(MarioActor actor) {
+		for (int i = 0; i < getActors().size; i++) {
+			MarioActor targetActor = (MarioActor)getActors().get(i);
+			
+			if (actor != targetActor) {				
+				HitBox sourceHitBox = ((MarioActor)actor).createHitBox();
+				HitBox targetHitBox = targetActor.createHitBox();
+				Rectangle collisionDepth = sourceHitBox.checkCollision(targetHitBox);
+				if (collisionDepth != null) {
+					// if source actor was above target actor in previous frame
+					if (!targetActor.isDead() && actor.getVelocity().y <= 0f && actor.getY() >= targetHitBox.getPositionY() + targetHitBox.getSizeY()) {
+						if (actor.canStomp() && targetActor.canBeStomped()) {
+							targetActor.kill();
+							actor.applyForce("EnemyBounce", 0f, 20f, 0f, 20f);
+						}
+						//System.out.println("Collision: " + String.valueOf(collisionDepth.x) + ", " + String.valueOf(collisionDepth.y) + ", " + String.valueOf(collisionDepth.height) + ", " + String.valueOf(collisionDepth.width));
+					}
+				}
+			}
+		}
 	}
 	
 	@Override
