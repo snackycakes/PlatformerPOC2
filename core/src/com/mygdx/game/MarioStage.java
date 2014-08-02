@@ -276,6 +276,7 @@ public class MarioStage extends Stage {
 					case UPPER:
 						actor.setDesiredPositionY(actor.getDesiredPositionY() - collisionDepth.getHeight());
 						actor.setVelocityY(0);
+						//actor.applyForce("TileBounceBack", 0f, actor.getVelocity().y, 0f, -actor.getVelocity().y);
 						
 						if (actor.bumpsTiles()) {
 							MarioStaticTile marioTile = null;
